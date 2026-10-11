@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Griekse werkwoorden: het schema</title>
+<style>
+  :root{
+    --blauw:#1d3a6d; --blauw-licht:#e8eef8; --goud:#b98a2e; --goud-licht:#fdf4e0;
+    --rood:#a33d3d; --rood-licht:#fbeaea; --groen:#3d7a4a; --groen-licht:#e9f4ec;
+    --paars:#5b4a8a; --paars-licht:#efeaf8; --grijs:#f5f4f1; --inkt:#22262b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Georgia','Times New Roman',serif;color:var(--inkt);background:#faf9f6;line-height:1.55}
+  .wrap{max-width:960px;margin:0 auto;padding:1.2rem 1rem 4rem}
+  header{text-align:center;padding:2.4rem 0 1.4rem}
+  header h1{font-size:2.2rem;color:var(--blauw);letter-spacing:.5px}
+  header p{color:#666;margin-top:.4rem;font-style:italic}
+  h2{color:var(--blauw);font-size:1.5rem;margin:2.6rem 0 .4rem;border-bottom:2px solid var(--goud);display:inline-block;padding-bottom:.15rem}
+  h3{color:var(--blauw)}
+  .sec{margin-top:2.4rem}
+  .gr{font-family:'Gentium Plus','Palatino Linotype','Book Antiqua',serif}
+
+  /* ---------- schema: details/summary ---------- */
+  .schema-box{background:#fff;border:2px solid var(--blauw);border-radius:14px;padding:1.2rem 1rem;margin-top:1.2rem;box-shadow:0 3px 12px rgba(29,58,109,.08)}
+  .blok{border-radius:10px;border:2px solid transparent;position:relative}
+  .blok summary{list-style:none;cursor:pointer;border-radius:10px;padding:.85rem 1rem;transition:.15s}
+  .blok summary::-webkit-details-marker{display:none}
+  .blok summary::after{content:"▸";float:right;color:#999;transition:.15s;font-size:.9em}
+  .blok[open] summary::after{content:"▾"}
+  .blok summary b{font-size:1.05rem}
+  .blok summary small{display:block;color:#555;font-family:system-ui,sans-serif;font-size:.82rem;margin-top:.15rem}
+  .blok summary:hover{background:rgba(0,0,0,.05)}
+  .blok[open]{border-color:currentColor;box-shadow:0 0 0 3px rgba(185,138,46,.25)}
+  .blok-inhoud{padding:.6rem 1rem 1rem;font-size:.98rem}
+  .blok-inhoud p{margin:.3rem 0}
+  .b-stam{background:var(--blauw-licht);color:var(--blauw)}
+  .b-voor{background:var(--goud-licht);color:var(--goud)}
+  .b-tempus{background:var(--rood-licht);color:var(--rood)}
+  .b-modus{background:var(--paars-licht);color:var(--paars)}
+  .b-pers{background:var(--groen-licht);color:var(--groen)}
+  .pijl{text-align:center;color:#b9b39a;font-size:1.3rem;line-height:1.1}
+
+  /* ---------- tabellen ---------- */
+  table{border-collapse:collapse;width:100%;margin:1rem 0;background:#fff;font-size:.95rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  th,td{border:1px solid #ddd;padding:.5rem .8rem;text-align:left}
+  th{background:var(--blauw);color:#fff;font-weight:600}
+  tr:nth-child(even) td{background:#f8f8fb}
+  td.gr,th.gr{font-family:'Gentium Plus','Palatino Linotype',serif;font-size:1.05rem}
+
+  /* ---------- kaarten ---------- */
+  .kaarten{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin-top:1rem}
+  .kaart{background:#fff;border-radius:10px;padding:1rem 1.1rem;border-top:4px solid var(--blauw);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .kaart h4{color:var(--blauw);margin-bottom:.35rem;font-size:1rem}
+  .kaart p{font-size:.9rem;color:#444}
+  .kaart .gr{font-size:1rem}
+  .kaart .tag{display:inline-block;font-size:.72rem;background:var(--grijs);color:#666;border-radius:99px;padding:.1rem .55rem;margin-top:.5rem;font-family:system-ui,sans-serif}
+
+  /* ---------- voorbeeld-ontleding ---------- */
+  .ontleding{display:flex;flex-wrap:wrap;gap:.4rem;align-items:stretch;margin:1rem 0;font-size:1.15rem}
+  .ont{border-radius:8px;padding:.5rem .9rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+  .ont .lbl{display:block;font-family:system-ui,sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;margin-top:.25rem;color:#555}
+  .o-voor{background:var(--goud-licht)}
+  .o-stam{background:var(--blauw-licht)}
+  .o-tempus{background:var(--rood-licht)}
+  .o-modus{background:var(--paars-licht)}
+  .o-pers{background:var(--groen-licht)}
+
+  /* ---------- tabbladen: radio's, geen JS ---------- */
+  .tabs input{position:absolute;opacity:0;pointer-events:none}
+  .tabs{margin:.8rem 0 .5rem}
+  .tabs .balk{display:flex;gap:.4rem;flex-wrap:wrap}
+  .tabs label{font-family:system-ui,sans-serif;font-size:.85rem;border:1px solid #ccc;background:#fff;border-radius:99px;padding:.3rem .9rem;cursor:pointer;user-select:none}
+  .tabs label:hover{background:var(--blauw-licht)}
+  .panel{display:none;background:#fff;border:1px solid #e2e2e2;border-radius:10px;padding:1rem 1.2rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .tabs input:nth-of-type(1):checked ~ .balk label:nth-of-type(1),
+  .tabs input:nth-of-type(2):checked ~ .balk label:nth-of-type(2),
+  .tabs input:nth-of-type(3):checked ~ .balk label:nth-of-type(3),
+  .tabs input:nth-of-type(4):checked ~ .balk label:nth-of-type(4){background:var(--blauw);color:#fff;border-color:var(--blauw)}
+  .tabs input:nth-of-type(1):checked ~ div:nth-of-type(2),
+  .tabs input:nth-of-type(2):checked ~ div:nth-of-type(3),
+  .tabs input:nth-of-type(3):checked ~ div:nth-of-type(4),
+  .tabs input:nth-of-type(4):checked ~ div:nth-of-type(5){display:block}
+
+  .tip{background:var(--goud-licht);border-left:4px solid var(--goud);border-radius:8px;padding:.8rem 1rem;margin:.9rem 0;font-size:.95rem}
+  .tip b{color:var(--goud)}
+  footer{text-align:center;color:#999;font-size:.85rem;margin-top:4rem;font-style:italic}
+  nav.topo{text-align:center;margin-top:1.4rem}
+  nav.topo a{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--blauw);text-decoration:none;border:1px solid #ccd6e8;border-radius:99px;padding:.3rem .8rem;margin:.2rem;display:inline-block}
+  nav.topo a:hover{background:var(--blauw-licht)}
+  :target{scroll-margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Griekse werkwoorden: het schema</h1>
+  <p>Elke Griekse werkwoordsvorm bouw je op uit bouwstenen — klik erop en ontdek wat ze doen.</p>
+</header>
+
+<nav class="topo">
+  <a href="#schema">Het schema</a>
+  <a href="#voor">Elementen vóór de stam</a>
+  <a href="#tempus">Tempuskenmerken</a>
+  <a href="#modus">Moduskenmerken</a>
+  <a href="#pers">Persoonsuitgangen</a>
+  <a href="#oefen">Voorbeelden</a>
+</nav>
+
+<!-- ================= SCHEMA ================= -->
+<div class="sec" id="schema">
+  <h2>Het schema</h2>
+  <p>Een Griekse werkwoordsvorm bestaat uit vijf onderdelen die je op hun plek in dit schema zet. Klik op een blok voor uitleg.</p>
+
+  <div class="schema-box">
+    <details class="blok b-voor">
+      <summary><b>Elementen vóór de stam</b><small>augment (verleden tijd) · reduplicatie (perfectum)</small></summary>
+      <div class="blok-inhoud">
+        <p><b>Augment</b> — markeert de verleden tijd: <span class="gr">ἐ-λυ-ο-ν</span> (imperfectum) of <span class="gr">ἐ-λυ-σα-μεν</span> (aoristus).</p>
+        <p><b>Reduplicatie</b> — markeert het perfectum, met een herhaalde beginletter met <i>ε</i>: <span class="gr">λε-λυ-κ-α</span>.</p>
+      </div>
+    </details>
+    <div class="pijl">↓</div>
+    <details class="blok b-stam">
+      <summary><b>Stam</b><small>op klinker, liquida, labiaal, gutturaal of dentaal</small></summary>
+      <div class="blok-inhoud">
+        <p>De stam eindigt op een klinker of op een medeklinker van één van vier soorten — en die soort bepaalt de bijzonderheden:</p>
+        <table>
+          <tr><th>Soort stam</th><th class="gr">Voorbeelden</th></tr>
+          <tr><td>op klinker</td><td class="gr">λυ-, κελευ-</td></tr>
+          <tr><td>op liquida (μ, λ, ν, ρ)</td><td class="gr">βαλ-, μεν-, δερ-</td></tr>
+          <tr><td>op labiaal (π, β, φ)</td><td class="gr">κοπ-, ριφ-</td></tr>
+          <tr><td>op gutturaal (κ, γ, χ)</td><td class="gr">φυλακ-</td></tr>
+          <tr><td>op dentaal (τ, δ, θ)</td><td class="gr">νομιδ-</td></tr>
+        </table>
+        <div class="kaarten">
+          <div class="kaart"><h4>Stam op klinker</h4><p>Niks aan de hand! Geen bijzonderheden.</p></div>
+          <div class="kaart"><h4>Stam op liquida</h4><p>Heeft een <b>pseudosigmatische aoristus</b> en een <b>futurum Atticum</b>.</p></div>
+          <div class="kaart"><h4>Stam op labiaal</h4><p>Let op bij de sigmatische aoristus: <span class="gr">ἐ-κοπ-σα-μεν &gt; ἐκοψαμεν</span>, <span class="gr">ἐ-ρριφ-σα-μεν &gt; ἐρριψαμεν</span>. Heeft ook een <b>geaspireerd perfectum</b>.</p></div>
+          <div class="kaart"><h4>Stam op gutturaal</h4><p>Let op bij de sigmatische aoristus: <span class="gr">ἐ-φυλακ-σα-μεν &gt; ἐφυλαξαμεν</span>. Heeft ook een <b>geaspireerd perfectum</b>.</p></div>
+          <div class="kaart"><h4>Stam op dentaal</h4><p>Let op bij de sigmatische aoristus: <span class="gr">ἐ-νομιδ-σα-μεν &gt; ἐνομισαμεν</span>. Stammen op <span class="gr">-ιδ-</span> hebben een <b>futurum Atticum</b>.</p></div>
+        </div>
+      </div>
+    </details>
+    <div class="pijl">↓</div>
+    <details class="blok b-tempus">
+      <summary><b>Tempuskenmerk</b><small>praesens/imperfectum · aoristus · perfectum · futurum</small></summary>
+      <div class="blok-inhoud">
+        <p>Tussen stam en rest van de vorm staat een kenmerk dat de tijd aangeeft:</p>
+        <table>
+          <tr><th>Tijd</th><th>Kenmerk</th><th class="gr">Voorbeeld</th></tr>
+          <tr><td>praesens / imperfectum</td><td>thematisch: <span class="gr">-ε/ο-</span> of athematisch: –</td><td class="gr">λυ-ο-μεν</td></tr>
+          <tr><td>aoristus</td><td>sigmatisch, pseudosigmatisch, thematisch of stamaoristus</td><td class="gr">ἐ-λυ-σα-μεν</td></tr>
+          <tr><td>perfectum</td><td>kappa-perfectum, geaspireerd of stamperfectum</td><td class="gr">λε-λυ-κ-αμεν</td></tr>
+          <tr><td>futurum</td><td>sigmatisch of futurum Atticum</td><td class="gr">λυ-σο-μεν</td></tr>
+        </table>
+        <p>Alle details vind je bij <a href="#tempus">Tempuskenmerken</a>.</p>
+      </div>
+    </details>
+    <div class="pijl">↓</div>
+    <details class="blok b-modus">
+      <summary><b>Moduskenmerk</b><small>indicativus · coniunctivus · optativus</small></summary>
+      <div class="blok-inhoud">
+        <p><b>Indicativus</b>: geen kenmerk (kenmerk nul).<br>
+        <b>Coniunctivus</b>: de verlengde themavocaal <span class="gr">-η/ω-</span>.<br>
+        <b>Optativus</b>: <span class="gr">-ι-</span>, <span class="gr">-ιη-</span> of <span class="gr">-ιε-</span> (alleen 3e persoon mv.).</p>
+        <div class="tip"><b>NB:</b> de imperativus heeft <i>eigen</i> persoonsuitgangen, dus geen los moduskenmerk.</div>
+      </div>
+    </details>
+    <div class="pijl">↓</div>
+    <details class="blok b-pers">
+      <summary><b>Persoonsuitgang</b><small>aktief of medium · primair of secundair</small></summary>
+      <div class="blok-inhoud">
+        <p>Vertelt <i>wie</i> er handelt: 1e, 2e of 3e persoon, enkelform of meervoud. Alle overzichten vind je bij <a href="#pers">Persoonsuitgangen</a>.</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ================= ELEMENTEN VOOR ================= -->
+<div class="sec" id="voor">
+  <h2>Elementen vóór de stam</h2>
+  <p>Vóór de stam kan iets staan dat de tijd bepaalt. Twee gevallen:</p>
+  <table>
+    <tr><th>Element</th><th>Betekenis</th><th class="gr">Voorbeeld</th></tr>
+    <tr><td><b>Augment</b></td><td>verleden tijd</td><td class="gr">ἐ-λυ-ο-ν</td></tr>
+    <tr><td><b>Reduplicatie</b></td><td>perfectum</td><td class="gr">λε-λυ-κ-α</td></tr>
+  </table>
+</div>
+
+<!-- ================= TEMPUSKENMERKEN ================= -->
+<div class="sec" id="tempus">
+  <h2>Tempuskenmerken</h2>
+  <div class="tabs">
+    <input type="radio" name="t-tempus" id="rt-praes" checked>
+    <input type="radio" name="t-tempus" id="rt-aor">
+    <input type="radio" name="t-tempus" id="rt-perf">
+    <input type="radio" name="t-tempus" id="rt-fut">
+    <div class="balk">
+      <label for="rt-praes">Praesens / imperfectum</label>
+      <label for="rt-aor">Aoristus</label>
+      <label for="rt-perf">Perfectum</label>
+      <label for="rt-fut">Futurum</label>
+    </div>
+    <div class="panel">
+      <table>
+        <tr><th>Type</th><th>Kenmerk</th><th class="gr">Voorbeelden</th></tr>
+        <tr><td><b>thematisch</b></td><td class="gr">-ε/ο-</td><td class="gr">λυ-ο-μεν<br>λυ-ε-τε</td></tr>
+        <tr><td><b>athematisch</b></td><td>–</td><td class="gr">φη-μι<br>δυνα-μαι</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <table>
+        <tr><th>Type</th><th>Kenmerk</th><th class="gr">Voorbeelden</th></tr>
+        <tr><td><b>sigmatisch</b></td><td class="gr">-σ(α)-</td><td class="gr">ἐ-λυ-σα-μεν</td></tr>
+        <tr><td><b>pseudosigmatisch</b></td><td class="gr">-(α)-</td><td class="gr">ἐ-μειν-α-μεν</td></tr>
+        <tr><td><b>thematisch</b></td><td class="gr">-ε/ο-</td><td class="gr">ἐ-βαλ-ο-μεν</td></tr>
+        <tr><td><b>stamaoristus</b></td><td>–</td><td class="gr">ἐ-στη- -ν</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <table>
+        <tr><th>Type</th><th>Kenmerk</th><th class="gr">Voorbeelden</th></tr>
+        <tr><td><b>kappa-perfectum</b></td><td class="gr">-κ-</td><td class="gr">λε-λυ-κ-αμεν</td></tr>
+        <tr><td><b>geaspireerd</b></td><td class="gr">-h-</td><td class="gr">κε-κοπ-h-α &gt; κε-κοφ-α<br>πε-φυλακ-h-α &gt; πεφυλαχα</td></tr>
+        <tr><td><b>stamperfectum</b></td><td>–</td><td class="gr">πε-φευγ- -α</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <table>
+        <tr><th>Type</th><th>Kenmerk</th><th class="gr">Voorbeelden</th></tr>
+        <tr><td><b>sigmatisch</b></td><td class="gr">-σ- + -ε/ο-</td><td class="gr">λυ-σο-μεν<br>λυ-σε-τε</td></tr>
+        <tr><td><b>futurum Atticum</b></td><td class="gr">-ε- + -ε/ο-</td><td class="gr">μεν-ε-ο-μεν &gt; μενοῦμεν<br>μεν-ε-ε-τε &gt; μενεῖτε<br>νομι-ε-ε-τε &gt; νομιειτε</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODUSKENMERKEN ================= -->
+<div class="sec" id="modus">
+  <h2>Moduskenmerken</h2>
+  <div class="kaarten">
+    <div class="kaart"><h4>Indicativus</h4><p>Heeft <b>geen kenmerk</b> — ofwel: het kenmerk nul.</p></div>
+    <div class="kaart"><h4>Coniunctivus</h4><p>Kenmerk: de verlengde themavocaal <span class="gr">-η/ω-</span>.</p></div>
+    <div class="kaart"><h4>Optativus</h4><p>Kenmerk: <span class="gr">-ι-</span> of <span class="gr">-ιη-</span> of <span class="gr">-ιε-</span> (dat laatste alleen in de 3e persoon meervoud).</p></div>
+  </div>
+  <div class="tip"><b>NB:</b> de imperativus heeft eigen persoonsuitgangen — er is dus geen los moduskenmerk nodig.</div>
+</div>
+
+<!-- ================= PERSOONSUITGANGEN ================= -->
+<div class="sec" id="pers">
+  <h2>Persoonsuitgangen</h2>
+
+  <h3 style="margin-top:1.2rem">Aktief</h3>
+  <div class="tabs">
+    <input type="radio" name="t-aktief" id="ra-pri" checked>
+    <input type="radio" name="t-aktief" id="ra-sec">
+    <div class="balk">
+      <label for="ra-pri">Primair</label>
+      <label for="ra-sec">Secundair</label>
+    </div>
+    <div class="panel">
+      <p style="margin:.2rem 0 .4rem"><b>Primair:</b> tegenwoordige tijden / coniunctivus</p>
+      <table>
+        <tr><th></th><th class="gr">Uitgang</th></tr>
+        <tr><td>1e ps. enk.</td><td class="gr">-μι of -ω</td></tr>
+        <tr><td>2e ps. enk.</td><td class="gr">-ς of -εις</td></tr>
+        <tr><td>3e ps. enk.</td><td class="gr">-σι of -ει</td></tr>
+        <tr><td>1e ps. mv.</td><td class="gr">-μεν</td></tr>
+        <tr><td>2e ps. mv.</td><td class="gr">-τε</td></tr>
+        <tr><td>3e ps. mv.</td><td class="gr">-ντι &gt; -σι + verlenging</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <p style="margin:.2rem 0 .4rem"><b>Secundair:</b> verleden tijden / optativus</p>
+      <table>
+        <tr><th></th><th class="gr">Uitgang</th></tr>
+        <tr><td>1e ps. enk.</td><td class="gr">-ν</td></tr>
+        <tr><td>2e ps. enk.</td><td class="gr">-ς</td></tr>
+        <tr><td>3e ps. enk.</td><td>–</td></tr>
+        <tr><td>1e ps. mv.</td><td class="gr">-μεν</td></tr>
+        <tr><td>2e ps. mv.</td><td class="gr">-τε</td></tr>
+        <tr><td>3e ps. mv.</td><td class="gr">-ν of -σαν</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-top:1.6rem">Medium</h3>
+  <div class="tabs">
+    <input type="radio" name="t-medium" id="rm-pri" checked>
+    <input type="radio" name="t-medium" id="rm-sec">
+    <div class="balk">
+      <label for="rm-pri">Primair</label>
+      <label for="rm-sec">Secundair</label>
+    </div>
+    <div class="panel">
+      <p style="margin:.2rem 0 .4rem"><b>Primair:</b> tegenwoordige tijden / coniunctivus</p>
+      <table>
+        <tr><th></th><th class="gr">Uitgang</th></tr>
+        <tr><td>1e ps. enk.</td><td class="gr">-μαι</td></tr>
+        <tr><td>2e ps. enk.</td><td class="gr">-σαι (vaak contractie!)</td></tr>
+        <tr><td>3e ps. enk.</td><td class="gr">-ται</td></tr>
+        <tr><td>1e ps. mv.</td><td class="gr">-μεθα</td></tr>
+        <tr><td>2e ps. mv.</td><td class="gr">-σθε</td></tr>
+        <tr><td>3e ps. mv.</td><td class="gr">-νται</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <p style="margin:.2rem 0 .4rem"><b>Secundair:</b> verleden tijden / optativus</p>
+      <table>
+        <tr><th></th><th class="gr">Uitgang</th></tr>
+        <tr><td>1e ps. enk.</td><td class="gr">-μην</td></tr>
+        <tr><td>2e ps. enk.</td><td class="gr">-σο (vaak contractie!)</td></tr>
+        <tr><td>3e ps. enk.</td><td class="gr">-το</td></tr>
+        <tr><td>1e ps. mv.</td><td class="gr">-μεθα</td></tr>
+        <tr><td>2e ps. mv.</td><td class="gr">-σθε</td></tr>
+        <tr><td>3e ps. mv.</td><td class="gr">-ντο</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-top:1.6rem">Imperativus</h3>
+  <p>De imperativus heeft <b>eigen persoonsuitgangen</b>:</p>
+  <table>
+    <tr><th>Aktief</th><th class="gr">Uitgangen</th><th>Medium</th><th class="gr">Uitgangen</th></tr>
+    <tr><td>2e ps. enk.</td><td class="gr">- , -θι, -ον, -ς</td><td>2e ps. enk.</td><td class="gr">-σο, -αι</td></tr>
+    <tr><td>2e ps. mv.</td><td class="gr">-τε</td><td>2e ps. mv.</td><td class="gr">-σθε</td></tr>
+  </table>
+</div>
+
+<!-- ================= VOORBEELDEN ================= -->
+<div class="sec" id="oefen">
+  <h2>Geïllustreerde voorbeelden</h2>
+  <p>Zo ziet een complete vorm eruit in het schema. Klik op een tabje.</p>
+  <div class="tabs">
+    <input type="radio" name="t-ontl" id="rx-1" checked>
+    <input type="radio" name="t-ontl" id="rx-2">
+    <input type="radio" name="t-ontl" id="rx-3">
+    <input type="radio" name="t-ontl" id="rx-4">
+    <div class="balk">
+      <label for="rx-1" class="gr">λυομεν</label>
+      <label for="rx-2" class="gr">ἐλυσαμεν</label>
+      <label for="rx-3" class="gr">λελυκαμεν</label>
+      <label for="rx-4" class="gr">μενοῦμεν</label>
+    </div>
+    <div class="panel">
+      <p><b><span class="gr">λυομεν</span></b> — wij lossen (op)</p>
+      <div class="ontleding">
+        <div class="ont o-stam">λυ<span class="lbl">stam</span></div>
+        <div class="ont o-tempus">ο<span class="lbl">tempuskenmerk: praesens thematisch</span></div>
+        <div class="ont o-modus">–<span class="lbl">moduskenmerk: nul (indicativus)</span></div>
+        <div class="ont o-pers">μεν<span class="lbl">persoonsuitgang: primair aktief, 1e ps. mv.</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <p><b><span class="gr">ἐλυσαμεν</span></b> — wij losten (op)</p>
+      <div class="ontleding">
+        <div class="ont o-voor">ἐ<span class="lbl">augment (verleden tijd)</span></div>
+        <div class="ont o-stam">λυ<span class="lbl">stam</span></div>
+        <div class="ont o-tempus">σα<span class="lbl">tempuskenmerk: sigmatische aoristus</span></div>
+        <div class="ont o-modus">–<span class="lbl">moduskenmerk: nul (indicativus)</span></div>
+        <div class="ont o-pers">μεν<span class="lbl">persoonsuitgang: secundair aktief, 1e ps. mv.</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <p><b><span class="gr">λελυκαμεν</span></b> — wij hebben (op)gelost</p>
+      <div class="ontleding">
+        <div class="ont o-voor">λε<span class="lbl">reduplicatie (perfectum)</span></div>
+        <div class="ont o-stam">λυ<span class="lbl">stam</span></div>
+        <div class="ont o-tempus">κ<span class="lbl">tempuskenmerk: kappa-perfectum</span></div>
+        <div class="ont o-modus">–<span class="lbl">moduskenmerk: nul (indicativus)</span></div>
+        <div class="ont o-pers">αμεν<span class="lbl">persoonsuitgang: secundair aktief, 1e ps. mv.</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <p><b><span class="gr">μενοῦμεν</span></b> — wij zullen blijven (van <span class="gr">μεν-ε-ο-μεν</span>)</p>
+      <div class="ontleding">
+        <div class="ont o-stam">μεν<span class="lbl">stam op liquida</span></div>
+        <div class="ont o-tempus">ε-ο<span class="lbl">futurum Atticum</span></div>
+        <div class="ont o-modus">–<span class="lbl">moduskenmerk: nul (indicativus)</span></div>
+        <div class="ont o-pers">μεν<span class="lbl">persoonsuitgang: primair aktief, 1e ps. mv.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Op basis van de les “Griekse werkwoorden: schema”</footer>
+</div>
+</body>
+</html>
